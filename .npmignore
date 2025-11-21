@@ -1,0 +1,20 @@
+# Test files
+test*.js
+tester.js
+test-insim/
+
+# Development files
+.git/
+.gitignore
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Root level test files (if any)
+../test.js
+../test_call.js
+
+# Documentation development
+*.md.bak
+

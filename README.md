@@ -1,9 +1,9 @@
 # InSim API (Node.js)
 
-Un module simple et léger pour interagir avec l'API **InSim** :
-- 📱 Envoi de SMS
-- 👥 Ajout de contacts
-- 📞 Clic-to-Call
+A simple and lightweight module to interact with the **InSim** API:
+- 📱 Send SMS
+- 👥 Add contacts
+- 📞 Click-to-Call
 
 ## 📦 Installation
 
@@ -11,22 +11,22 @@ Un module simple et léger pour interagir avec l'API **InSim** :
 npm install insim-api
 ```
 
-## 🚀 Utilisation
+## 🚀 Usage
 
-### Envoi de SMS
+### Send SMS
 
 ```javascript
 const { sendSMS } = require('insim-api');
 
 const config = {
-  login: "votre-email@example.com",
-  accessKey: "votre-clé-d'accès"
+  login: "your-email@example.com",
+  accessKey: "your-access-key"
 };
 
 const messages = [
   {
     phone_number: "+33612345678",
-    message: "Bonjour depuis InSim API",
+    message: "Hello from InSim API",
     url: "",
     priorite: 1,
     date_to_send: "2025-10-06 12:00:00"
@@ -34,11 +34,11 @@ const messages = [
 ];
 
 sendSMS(config, messages)
-  .then(response => console.log('SMS envoyé:', response))
-  .catch(error => console.error('Erreur:', error));
+  .then(response => console.log('SMS sent:', response))
+  .catch(error => console.error('Error:', error));
 ```
 
-**Réponse :**
+**Response:**
 ```json
 [
   {
@@ -53,20 +53,20 @@ sendSMS(config, messages)
 ]
 ```
 
-### Ajout de contacts
+### Add Contacts
 
 ```javascript
 const { addContacts } = require('insim-api');
 
 const config = {
-  login: "votre-email@example.com",
-  accessKey: "votre-clé-d'accès"
+  login: "your-email@example.com",
+  accessKey: "your-access-key"
 };
 
 const contacts = [
   {
-    firstname: "Jean",
-    lastname: "Dupont",
+    firstname: "John",
+    lastname: "Doe",
     phone_number: "+33612345678",
     adress: "",
     email: ""
@@ -74,18 +74,18 @@ const contacts = [
 ];
 
 addContacts(config, contacts)
-  .then(response => console.log('Contact ajouté:', response))
-  .catch(error => console.error('Erreur:', error));
+  .then(response => console.log('Contact added:', response))
+  .catch(error => console.error('Error:', error));
 ```
 
-**Réponse (succès) :**
+**Response (success):**
 ```json
 {
   "data": {
     "contact": [
       {
-        "firstname": "Jean",
-        "lastname": "Dupont",
+        "firstname": "John",
+        "lastname": "Doe",
         "phonenumber": "+33612345678",
         "adress": "",
         "email": "",
@@ -96,7 +96,7 @@ addContacts(config, contacts)
 }
 ```
 
-**Réponse (erreur) :**
+**Response (error):**
 ```json
 {
   "data": {
@@ -118,28 +118,28 @@ addContacts(config, contacts)
 }
 ```
 
-**Codes d'erreur pour les contacts :**
-- `#001` : Invalid phone number
-- `#002` : Empty phone number
-- `#003` : No phone number variable found
-- `#004` : Invalid E-mail (Warning, do not stop creating or updating contact)
+**Error codes for contacts:**
+- `#001`: Invalid phone number
+- `#002`: Empty phone number
+- `#003`: No phone number variable found
+- `#004`: Invalid E-mail (Warning, does not stop creating or updating contact)
 
-### Clic-to-Call
+### Click-to-Call
 
 ```javascript
 const { callNumber } = require('insim-api');
 
 const config = {
-  login: "votre-email@example.com",
-  accessKey: "votre-clé-d'accès"
+  login: "your-email@example.com",
+  accessKey: "your-access-key"
 };
 
 callNumber(config, "+33612345678")
-  .then(response => console.log('Appel initié:', response))
-  .catch(error => console.error('Erreur:', error));
+  .then(response => console.log('Call initiated:', response))
+  .catch(error => console.error('Error:', error));
 ```
 
-**Réponse :**
+**Response:**
 ```json
 [
   {
@@ -150,61 +150,61 @@ callNumber(config, "+33612345678")
 ]
 ```
 
-**Codes d'erreur pour clic-to-call :**
-- `#001` : Our servers are down
-- `#002` : Phone not connected, inSIM not running on the phone
+**Error codes for click-to-call:**
+- `#001`: Our servers are down
+- `#002`: Phone not connected, inSIM not running on the phone
 
-**Valeurs de résultat :**
-- `"success"` : Information successfully arrived to our servers
-- `"failed"` : Request failed
+**Result values:**
+- `"success"`: Information successfully arrived to our servers
+- `"failed"`: Request failed
 
 ## 📚 API
 
 ### `sendSMS(config, messages)`
 
-Envoie un ou plusieurs SMS.
+Sends one or more SMS.
 
-**Paramètres:**
-- `config` (Object): Configuration avec `login` et `accessKey`
-- `messages` (Array): Tableau de messages à envoyer
-  - `phone_number` (String): Numéro de téléphone au format international
-  - `message` (String): Contenu du message
-  - `url` (String): URL optionnelle à inclure dans le message
-  - `priorite` (Number): Priorité du message
-  - `date_to_send` (String): Date d'envoi au format "YYYY-MM-DD HH:mm:ss"
+**Parameters:**
+- `config` (Object): Configuration with `login` and `accessKey`
+- `messages` (Array): Array of messages to send
+  - `phone_number` (String): Phone number in international format
+  - `message` (String): Message content
+  - `url` (String): Optional URL to include in the message
+  - `priorite` (Number): Message priority
+  - `date_to_send` (String): Send date in format "YYYY-MM-DD HH:mm:ss"
 
-**Retourne:** Promise avec un tableau contenant les informations des SMS envoyés
+**Returns:** Promise with an array containing the information of sent SMS
 
 ### `addContacts(config, contacts)`
 
-Ajoute un ou plusieurs contacts.
+Adds one or more contacts.
 
-**Paramètres:**
-- `config` (Object): Configuration avec `login` et `accessKey`
-- `contacts` (Array): Tableau de contacts à ajouter
-  - `firstname` (String): Prénom du contact
-  - `lastname` (String): Nom du contact
-  - `phone_number` (String): Numéro de téléphone au format international
-  - `adress` (String): Adresse du contact (optionnel)
-  - `email` (String): Email du contact (optionnel)
+**Parameters:**
+- `config` (Object): Configuration with `login` and `accessKey`
+- `contacts` (Array): Array of contacts to add
+  - `firstname` (String): Contact first name
+  - `lastname` (String): Contact last name
+  - `phone_number` (String): Phone number in international format
+  - `adress` (String): Contact address (optional)
+  - `email` (String): Contact email (optional)
 
-**Retourne:** Promise avec la réponse de l'API contenant le résultat pour chaque contact
+**Returns:** Promise with the API response containing the result for each contact
 
 ### `callNumber(config, phoneNumber)`
 
-Initie un appel via clic-to-call.
+Initiates a call via click-to-call.
 
-**Paramètres:**
-- `config` (Object): Configuration avec `login` et `accessKey`
-- `phoneNumber` (String): Numéro de téléphone à appeler au format international
+**Parameters:**
+- `config` (Object): Configuration with `login` and `accessKey`
+- `phoneNumber` (String): Phone number to call in international format
 
-**Retourne:** Promise avec la réponse de l'API contenant le statut de l'appel
+**Returns:** Promise with the API response containing the call status
 
-## 📋 Structures de réponse
+## 📋 Response Structures
 
-### Structure de réponse - `sendSMS`
+### Response Structure - `sendSMS`
 
-La fonction `sendSMS` retourne un tableau d'objets contenant les informations de chaque SMS envoyé :
+The `sendSMS` function returns an array of objects containing the information of each sent SMS:
 
 ```json
 [
@@ -220,26 +220,26 @@ La fonction `sendSMS` retourne un tableau d'objets contenant les informations de
 ]
 ```
 
-**Champs de la réponse :**
-- `id_sms_api` (String) : Identifiant unique du SMS
-- `sms_per_message` (Number) : Nombre de SMS nécessaires pour envoyer le message
-- `user` (String) : Email de l'utilisateur qui a envoyé le SMS
-- `sent_time` (String) : Date et heure d'envoi au format ISO 8601
-- `phone_number` (String) : Numéro de téléphone du destinataire
-- `message` (String) : Contenu du message envoyé (avec URL si fournie)
-- `sent` (Number) : Statut d'envoi (1 = envoyé, 0 = non envoyé)
+**Response fields:**
+- `id_sms_api` (String): Unique SMS identifier
+- `sms_per_message` (Number): Number of SMS needed to send the message
+- `user` (String): Email of the user who sent the SMS
+- `sent_time` (String): Send date and time in ISO 8601 format
+- `phone_number` (String): Recipient phone number
+- `message` (String): Sent message content (with URL if provided)
+- `sent` (Number): Send status (1 = sent, 0 = not sent)
 
-### Structure de réponse - `addContacts`
+### Response Structure - `addContacts`
 
-#### Réponse de succès
+#### Success Response
 
 ```json
 {
   "data": {
     "contact": [
       {
-        "firstname": "Jean",
-        "lastname": "Dupont",
+        "firstname": "John",
+        "lastname": "Doe",
         "phonenumber": "+33612345678",
         "adress": "",
         "email": "",
@@ -250,7 +250,7 @@ La fonction `sendSMS` retourne un tableau d'objets contenant les informations de
 }
 ```
 
-#### Réponse d'erreur
+#### Error Response
 
 ```json
 {
@@ -273,23 +273,23 @@ La fonction `sendSMS` retourne un tableau d'objets contenant les informations de
 }
 ```
 
-**Champs de la réponse :**
-- `data.contact` (Array) : Tableau contenant les résultats pour chaque contact
-  - `firstname` / `first_name` (String) : Prénom du contact
-  - `lastname` / `last_name` (String) : Nom du contact
-  - `phonenumber` / `phone_number` (String) : Numéro de téléphone
-  - `adress` (String) : Adresse du contact
-  - `email` (String) : Email du contact
-  - `result` (String) : Résultat de l'opération (`"success"` ou `"failed"`)
-  - `errors` (Array, optionnel) : Tableau des codes d'erreur si `result` est `"failed"`
+**Response fields:**
+- `data.contact` (Array): Array containing the results for each contact
+  - `firstname` / `first_name` (String): Contact first name
+  - `lastname` / `last_name` (String): Contact last name
+  - `phonenumber` / `phone_number` (String): Phone number
+  - `adress` (String): Contact address
+  - `email` (String): Contact email
+  - `result` (String): Operation result (`"success"` or `"failed"`)
+  - `errors` (Array, optional): Array of error codes if `result` is `"failed"`
 
-**Codes d'erreur pour les contacts :**
-- `#001` : Invalid phone number
-- `#002` : Empty phone number
-- `#003` : No phone number variable found
-- `#004` : Invalid E-mail (Warning, ne bloque pas la création ou mise à jour du contact)
+**Error codes for contacts:**
+- `#001`: Invalid phone number
+- `#002`: Empty phone number
+- `#003`: No phone number variable found
+- `#004`: Invalid E-mail (Warning, does not block contact creation or update)
 
-### Structure de réponse - `callNumber`
+### Response Structure - `callNumber`
 
 ```json
 [
@@ -301,28 +301,28 @@ La fonction `sendSMS` retourne un tableau d'objets contenant les informations de
 ]
 ```
 
-**Champs de la réponse :**
-- `info` (String) : Message informatif
-- `result` (String) : Résultat de l'opération (`"success"` ou `"failed"`)
-- `errors` (Array) : Tableau des codes d'erreur (vide si succès)
+**Response fields:**
+- `info` (String): Informative message
+- `result` (String): Operation result (`"success"` or `"failed"`)
+- `errors` (Array): Array of error codes (empty if success)
 
-**Codes d'erreur pour clic-to-call :**
-- `#001` : Our servers are down
-- `#002` : Phone not connected, inSIM not running on the phone
+**Error codes for click-to-call:**
+- `#001`: Our servers are down
+- `#002`: Phone not connected, inSIM not running on the phone
 
-**Valeurs de résultat :**
-- `"success"` : L'information est arrivée avec succès sur nos serveurs
-- `"failed"` : La requête a échoué
+**Result values:**
+- `"success"`: Information successfully arrived at our servers
+- `"failed"`: Request failed
 
-## 🔗 Liens
+## 🔗 Links
 
 - [GitHub Repository](https://github.com/ArdaryinSIM/insim-api)
 - [InSim Website](https://ardary-insim.com/)
 
-## 📄 Licence
+## 📄 License
 
 MIT
 
-## 👤 Auteur
+## 👤 Author
 
 ArdaryinSIM

@@ -1,6 +1,6 @@
 {
   "name": "insim-api",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Node.js client for InSim API (SMS sending, contact management and click-to-call).",
   "main": "index.js",
   "scripts": {

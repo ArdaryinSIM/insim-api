@@ -314,6 +314,231 @@ The `sendSMS` function returns an array of objects containing the information of
 - `"success"`: Information successfully arrived at our servers
 - `"failed"`: Request failed
 
+## 🔔 Webhooks / Callbacks
+
+InSim API can send webhooks to your callback URLs to notify you about various events in real-time. You don't need to install this module to receive webhooks - you just need to configure your callback URLs in your InSim account settings.
+
+### Overview
+
+- **HTTP Method**: All webhooks are sent using **GET** requests
+- **Data Encoding**: All data is encoded using **encodeURIComponent()** before being sent
+- **Real-time Notifications**: Receive instant notifications about SMS, calls, link clicks, and more
+
+### Available Webhooks
+
+| Webhook Event | GET Parameter | Description |
+|---------------|---------------|-------------|
+| Incoming SMS | `message` | Notifications when SMS is received |
+| Call Events | `calls` | Notifications about incoming/outgoing/missed calls |
+| Link Click Tracking | `clics` | Notifications when tracking links are clicked |
+| Call Qualification | `qualification` | Notifications when call qualifications are submitted |
+| Delivery Status (DLR) | `status` | SMS delivery status updates (sent/received) |
+
+### Example: Handling Webhooks with Express
+
+```javascript
+const express = require('express');
+const app = express();
+
+// Handle incoming SMS webhook
+app.get('/webhook', (req, res) => {
+  if (req.query.message) {
+    const message = JSON.parse(decodeURIComponent(req.query.message));
+    console.log('Incoming SMS from:', message.from);
+    console.log('Message:', message.message);
+    // Process the SMS...
+    res.status(200).send('OK');
+  }
+  
+  // Handle delivery status webhook
+  if (req.query.status) {
+    const status = JSON.parse(decodeURIComponent(req.query.status));
+    console.log('SMS Status:', status.status);
+    console.log('SMS ID:', status.id_sms_api);
+    // Update delivery status...
+    res.status(200).send('OK');
+  }
+  
+  // Handle call events webhook
+  if (req.query.calls) {
+    const call = JSON.parse(decodeURIComponent(req.query.calls));
+    console.log('Call Type:', call.title);
+    console.log('Phone:', call.phone_number);
+    // Process call event...
+    res.status(200).send('OK');
+  }
+  
+  // Handle link click webhook
+  if (req.query.clics) {
+    const click = JSON.parse(decodeURIComponent(req.query.clics));
+    console.log('Link clicked by:', click.phone_number);
+    console.log('Link:', click.link);
+    // Track click...
+    res.status(200).send('OK');
+  }
+  
+  // Handle call qualification webhook
+  if (req.query.qualification) {
+    const qualification = JSON.parse(decodeURIComponent(req.query.qualification));
+    console.log('Qualification:', qualification.qualification);
+    // Process qualification...
+    res.status(200).send('OK');
+  }
+});
+
+app.listen(3000, () => {
+  console.log('Webhook server listening on port 3000');
+});
+```
+
+### Example: Handling Webhooks with PHP
+
+```php
+<?php
+// Handle incoming SMS webhook
+if (isset($_GET["message"])) {
+    $message = json_decode($_GET["message"], true);
+    
+    echo "Incoming SMS from: " . $message["from"] . "\n";
+    echo "Message: " . $message["message"] . "\n";
+    echo "Date: " . $message["date"] . "\n";
+    
+    // Process the SMS (save to database, trigger actions, etc.)
+    // ...
+    
+    http_response_code(200);
+    echo "OK";
+    exit;
+}
+
+// Handle delivery status webhook
+if (isset($_GET["status"])) {
+    $status = json_decode($_GET["status"], true);
+    
+    echo "SMS Status: " . $status["status"] . "\n";
+    echo "SMS ID: " . $status["id_sms_api"] . "\n";
+    echo "Phone: " . $status["phone_number"] . "\n";
+    
+    // Update delivery status in database
+    // ...
+    
+    http_response_code(200);
+    echo "OK";
+    exit;
+}
+
+// Handle call events webhook
+if (isset($_GET["calls"])) {
+    $call = json_decode($_GET["calls"], true);
+    
+    echo "Call Type: " . $call["title"] . "\n";
+    echo "Phone: " . $call["phone_number"] . "\n";
+    echo "Duration: " . $call["duration"] . "\n";
+    
+    // Process call event (update CRM, log call, etc.)
+    // ...
+    
+    http_response_code(200);
+    echo "OK";
+    exit;
+}
+
+// Handle link click webhook
+if (isset($_GET["clics"])) {
+    $click = json_decode($_GET["clics"], true);
+    
+    echo "Link clicked by: " . $click["phone_number"] . "\n";
+    echo "Link: " . $click["link"] . "\n";
+    echo "SMS ID: " . $click["id_sms_api"] . "\n";
+    
+    // Track click (update analytics, trigger conversions, etc.)
+    // ...
+    
+    http_response_code(200);
+    echo "OK";
+    exit;
+}
+
+// Handle call qualification webhook
+if (isset($_GET["qualification"])) {
+    $qualification = json_decode($_GET["qualification"], true);
+    
+    echo "Qualification: " . $qualification["qualification"] . "\n";
+    echo "Source: " . $qualification["title"] . "\n";
+    echo "Phone: " . $qualification["from"] . "\n";
+    
+    // Process qualification (update CRM, trigger workflows, etc.)
+    // ...
+    
+    http_response_code(200);
+    echo "OK";
+    exit;
+}
+
+// If no webhook parameter is found
+http_response_code(400);
+echo "No webhook data";
+?>
+```
+
+### Webhook Payload Examples
+
+#### Incoming SMS
+```json
+{
+  "device_identification": "user@email.com",
+  "title": "incoming_sms",
+  "from": "+33612345678",
+  "message": "Hello, this is a test message",
+  "date": "2023-12-17T20:15:30.565Z"
+}
+```
+
+#### Delivery Status (DLR)
+```json
+{
+  "user": "SENDER_LOGIN",
+  "phone_number": "+33612345678",
+  "status": "received",
+  "date_status": "2019-08-09T12:50:54.211Z",
+  "id_sms_api": "YOUR_ID_SMS"
+}
+```
+
+#### Call Event
+```json
+{
+  "device_identification": "user@email.com",
+  "title": "outgoing_call",
+  "phone_number": "+33612345678",
+  "call_time": "2023-12-17 20:32:51",
+  "duration": "15:11:04"
+}
+```
+
+**Status values for calls:**
+- `"incoming_call"`: Incoming call received
+- `"outgoing_call"`: Outgoing call made
+- `"missed_call"`: Call was missed
+
+**Status values for DLR:**
+- `"sent"`: SMS has been sent from the system
+- `"received"`: SMS has been received by the recipient's device
+
+### Important Notes
+
+- All webhooks use **GET** requests
+- All JSON payloads are encoded with **encodeURIComponent()**
+- Your server must decode using `decodeURIComponent()` or equivalent
+- Always return `200 OK` to acknowledge receipt
+- Use **HTTPS** for your callback URLs
+
+### Complete Documentation
+
+For complete webhook documentation including all payload structures, field descriptions, and implementation examples in PHP, Node.js, and Python, see:
+
+**[📖 Complete Webhooks Documentation](https://github.com/ArdaryinSIM/insim-http-api#-webhooks--callbacks)**
+
 ## 🔗 Links
 
 - [GitHub Repository](https://github.com/ArdaryinSIM/insim-api)

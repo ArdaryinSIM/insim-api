@@ -1,6 +1,6 @@
-# InSim API (Node.js)
+# inSIM API (Node.js)
 
-A simple and lightweight module to interact with the **InSim** API:
+A simple and lightweight module to interact with the **inSIM** API:
 - 📱 Send SMS
 - 👥 Add contacts
 - 📞 Click-to-Call
@@ -19,16 +19,16 @@ npm install insim-api
 const { sendSMS } = require('insim-api');
 
 const config = {
-  login: "your-email@example.com",
+  login: "user@email.com",
   accessKey: "your-access-key"
 };
 
 const messages = [
   {
     phone_number: "+33612345678",
-    message: "Hello from InSim API",
+    message: "Hello from inSIM API",
     url: "",
-    priorite: 1,
+    priority: 1,
     date_to_send: "2025-10-06 12:00:00"
   }
 ];
@@ -59,7 +59,7 @@ sendSMS(config, messages)
 const { addContacts } = require('insim-api');
 
 const config = {
-  login: "your-email@example.com",
+  login: "user@email.com",
   accessKey: "your-access-key"
 };
 
@@ -130,7 +130,7 @@ addContacts(config, contacts)
 const { callNumber } = require('insim-api');
 
 const config = {
-  login: "your-email@example.com",
+  login: "user@email.com",
   accessKey: "your-access-key"
 };
 
@@ -143,8 +143,8 @@ callNumber(config, "+33612345678")
 ```json
 [
   {
-    "info": "please make sure the phone is connected and inSIM is running",
     "result": "success",
+    "info": "please make sure the phone is connected and inSIM is running",
     "errors": []
   }
 ]
@@ -170,7 +170,7 @@ Sends one or more SMS.
   - `phone_number` (String): Phone number in international format
   - `message` (String): Message content
   - `url` (String): Optional URL to include in the message
-  - `priorite` (Number): Message priority
+  - `priority` (Number): Message priority
   - `date_to_send` (String): Send date in format "YYYY-MM-DD HH:mm:ss"
 
 **Returns:** Promise with an array containing the information of sent SMS
@@ -294,16 +294,16 @@ The `sendSMS` function returns an array of objects containing the information of
 ```json
 [
   {
-    "info": "please make sure the phone is connected and inSIM is running",
     "result": "success",
+    "info": "please make sure the phone is connected and inSIM is running",
     "errors": []
   }
 ]
 ```
 
 **Response fields:**
-- `info` (String): Informative message
 - `result` (String): Operation result (`"success"` or `"failed"`)
+- `info` (String): Informative message
 - `errors` (Array): Array of error codes (empty if success)
 
 **Error codes for click-to-call:**
@@ -316,7 +316,7 @@ The `sendSMS` function returns an array of objects containing the information of
 
 ## 🔔 Webhooks / Callbacks
 
-InSim API can send webhooks to your callback URLs to notify you about various events in real-time. You don't need to install this module to receive webhooks - you just need to configure your callback URLs in your InSim account settings.
+inSIM API can send webhooks to your callback URLs to notify you about various events in real-time. You don't need to install this module to receive webhooks - you just need to configure your callback URLs in your inSIM account settings.
 
 ### Overview
 
@@ -373,6 +373,7 @@ app.get('/webhook', (req, res) => {
     const click = JSON.parse(decodeURIComponent(req.query.clics));
     console.log('Link clicked by:', click.phone_number);
     console.log('Link:', click.link);
+    console.log('Title:', click.clicked_link);
     // Track click...
     res.status(200).send('OK');
   }
@@ -449,6 +450,7 @@ if (isset($_GET["clics"])) {
     
     echo "Link clicked by: " . $click["phone_number"] . "\n";
     echo "Link: " . $click["link"] . "\n";
+    echo "Title: " . $click["clicked_link"] . "\n";
     echo "SMS ID: " . $click["id_sms_api"] . "\n";
     
     // Track click (update analytics, trigger conversions, etc.)
@@ -505,6 +507,17 @@ echo "No webhook data";
 }
 ```
 
+#### Link Click Tracking
+```json
+{
+  "phone_number": "+33612345678",
+  "link": "https://arsms.co/oloe00en5QPi",
+  "clicked_link": "clicked_link",
+  "id_sms_api": "FI5O7apqaaqcUmQ",
+  "date": "2023-12-17T20:15:30.565Z"
+}
+```
+
 #### Call Event
 ```json
 {
@@ -542,7 +555,7 @@ For complete webhook documentation including all payload structures, field descr
 ## 🔗 Links
 
 - [GitHub Repository](https://github.com/ArdaryinSIM/insim-api)
-- [InSim Website](https://ardary-insim.com/)
+- [inSIM Website](https://ardary-insim.com/)
 
 ## 📄 License
 

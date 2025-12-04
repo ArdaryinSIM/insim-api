@@ -1,7 +1,7 @@
 {
   "name": "insim-api",
   "version": "1.0.3",
-  "description": "Node.js client for InSim API (SMS sending, contact management and click-to-call).",
+  "description": "Node.js client for inSIM API (SMS sending, contact management and click-to-call).",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

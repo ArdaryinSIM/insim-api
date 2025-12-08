@@ -53,6 +53,35 @@ sendSMS(config, messages)
 ]
 ```
 
+### Send SMS with Link Tracking
+
+To track link clicks in your SMS, use `[link]` in your message and provide the `url` parameter:
+
+```javascript
+const { sendSMS } = require('insim-api');
+
+const config = {
+  login: "user@email.com",
+  accessKey: "your-access-key"
+};
+
+const messages = [
+  {
+    phone_number: "+33612345678",
+    message: "Hello! Confirm your appointment here: [link]",
+    url: "https://example.com/confirm",
+    priority: 1,
+    date_to_send: "2025-10-06 12:00:00"
+  }
+];
+
+sendSMS(config, messages)
+  .then(response => console.log('SMS sent:', response))
+  .catch(error => console.error('Error:', error));
+```
+
+**Note:** The `[link]` placeholder in your message will be automatically replaced by a tracked short URL. When someone clicks the link, you'll receive a webhook notification (see Webhooks section below).
+
 ### Add Contacts
 
 ```javascript
@@ -168,8 +197,8 @@ Sends one or more SMS.
 - `config` (Object): Configuration with `login` and `accessKey`
 - `messages` (Array): Array of messages to send
   - `phone_number` (String): Phone number in international format
-  - `message` (String): Message content
-  - `url` (String): Optional URL to include in the message
+  - `message` (String): Message content. Use `[link]` to insert a tracked URL
+  - `url` (String): Optional URL to track (will replace `[link]` in the message)
   - `priority` (Number): Message priority
   - `date_to_send` (String): Send date in format "YYYY-MM-DD HH:mm:ss"
 
